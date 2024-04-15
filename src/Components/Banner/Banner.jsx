@@ -1,7 +1,23 @@
 import { Link, NavLink } from "react-router-dom";
 import loginPhoto from '../../assets/user.png'
+import { useContext } from "react";
+import { AuthContext } from "../../Providers/AuthProviders";
+import auth from "../../firebase/firebase.init";
 
 const Banner = () => {
+
+  const { user, logOut } = useContext(AuthContext)
+  console.log(user);
+
+  const handleSignOut = () => {
+    logOut(auth)
+      .then(result => {
+        console.log(result.user);
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
+  }
 
   const navLinks = <>
     <li><NavLink to={'/'}>Home</NavLink></li>
@@ -34,9 +50,14 @@ const Banner = () => {
             <img alt="Tailwind CSS Navbar component" src={loginPhoto} />
           </div>
         </div>
-        <Link to='/login'>
-          <button className="btn">Login</button>
-        </Link>
+        {
+          user ?
+            <button onClick={handleSignOut} className="btn">sign OUt</button>
+            :
+            <Link to='/login'>
+              <button className="btn">Login</button>
+            </Link>
+        }
       </div>
     </div>
   );
